@@ -38,8 +38,9 @@ describe('GET /locations', function () {
     var location = {
         latitude: 6.9102825,
         longitude: 79.8712862,
-        first: 'BMICH Office',
-        second: 'Bauddhaloka Mawatha',
+        name: 'Bandaranaike Memorial International Conference Hall',
+        line1: 'BMICH Office',
+        line2: 'Bauddhaloka Mawatha',
         city: 'Colombo',
         postal: '00700',
         district: 'Colombo',

@@ -20,8 +20,9 @@ describe('POST /locations', function () {
     var data = {
         latitude: 6.9102825,
         longitude: 79.8712862,
-        first: 'BMICH Office',
-        second: 'Bauddhaloka Mawatha',
+        name: 'Bandaranaike Memorial International Conference Hall',
+        line1: 'BMICH Office',
+        line2: 'Bauddhaloka Mawatha',
         city: 'Colombo',
         postal: '00700',
         district: 'Colombo',
@@ -93,9 +94,10 @@ describe('POST /locations', function () {
     var withoutFields = [
         'latitude',
         'longitude',
-        'first',
+        'line1',
         'city',
         'postal',
+        'district',
         'province',
         'country'
     ];
@@ -131,10 +133,12 @@ describe('POST /locations', function () {
     var invalidFields = {
         latitude: [120, '120', {foo: 'bar'}],
         longitude: [200, '200', {foo: 'bar'}],
-        first: [bigger],
-        second: [bigger],
+        name: [bigger],
+        line1: [bigger],
+        line2: [bigger],
         city: [bigger],
         district: [bigger],
+        province: [bigger],
         state: [bigger],
         country: ['LKR']
     };
