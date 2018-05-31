@@ -34,7 +34,7 @@ module.exports = function (router) {
             '^\/.*'
         ]
     }));
-    router.use(throttle({name: 'locations'}));
+    router.use(throttle.apis('locations'));
     router.use(bodyParser.json());
 
     /**
