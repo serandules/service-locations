@@ -131,7 +131,6 @@ describe('GET /locations', function () {
             if (e) {
                 return done(e);
             }
-            log.info(b)
             r.statusCode.should.equal(200);
             should.exist(b);
             should.exist(b.length);
@@ -184,7 +183,6 @@ describe('GET /locations', function () {
                 if (e) {
                     return done(e);
                 }
-                log.info(b)
                 r.statusCode.should.equal(errors.notFound().status);
                 should.exist(b);
                 should.exist(b.code);
@@ -261,7 +259,6 @@ describe('GET /locations', function () {
                         if (e) {
                             return done(e);
                         }
-                        log.info(b)
                         r.statusCode.should.equal(200);
                         should.exist(b);
                         validateLocations([b]);

@@ -43,7 +43,7 @@ module.exports = function (router) {
     router.post('/', validators.create, sanitizers.create, function (req, res) {
         Locations.createIt(req, res, req.body, function (err, location) {
             if (err) {
-                log.error(err);
+                log.error('locations:create', err);
                 return res.pond(errors.serverError());
             }
             res.locate(location.id).status(201).send(location);
@@ -53,7 +53,7 @@ module.exports = function (router) {
     router.get('/:id', validators.findOne, sanitizers.findOne, function (req, res) {
         mongutils.findOne(Locations, req.query, function (err, location) {
             if (err) {
-                log.error(err);
+                log.error('locations:find-one', err);
                 return res.pond(errors.serverError());
             }
             if (!location) {
@@ -66,7 +66,7 @@ module.exports = function (router) {
     router.put('/:id', validators.update, sanitizers.update, function (req, res) {
         Locations.findOne(req.query).exec(function (err, location) {
             if (err) {
-                log.error(err);
+                log.error('locations:find-one', err);
                 return res.pond(errors.serverError());
             }
             if (!location) {
@@ -79,7 +79,7 @@ module.exports = function (router) {
                 _id: id
             }, data, {new: true}, function (err, location) {
                 if (err) {
-                    log.error(err);
+                    log.error('locations:find-one-and-update', err);
                     return res.pond(errors.serverError());
                 }
                 res.locate(location.id).status(200).send(location);
@@ -94,7 +94,7 @@ module.exports = function (router) {
     router.get('/', validators.find, sanitizers.find, function (req, res) {
         mongutils.find(Locations, req.query.data, function (err, locations, paging) {
             if (err) {
-                log.error(err);
+                log.error('locations:find', err);
                 return res.pond(errors.serverError());
             }
             res.many(locations, paging);
@@ -110,7 +110,7 @@ module.exports = function (router) {
             _id: req.params.id
         }, function (err, o) {
             if (err) {
-                log.error(err);
+                log.error('locations:remove', err);
                 return res.pond(errors.serverError());
             }
             if (!o.result.n) {
