@@ -35,6 +35,7 @@ module.exports = function (router) {
         ]
     }));
     router.use(throttle.apis('locations'));
+    router.use(serandi.cors);
     router.use(bodyParser.json());
 
     /**
