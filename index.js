@@ -1,9 +1,7 @@
 var log = require('logger')('service-locations');
-var express = require('express');
 var bodyParser = require('body-parser');
 
 var errors = require('errors');
-var utils = require('utils');
 var mongutils = require('mongutils');
 var auth = require('auth');
 var throttle = require('throttle');
@@ -13,16 +11,6 @@ var Locations = require('model-locations');
 
 var validators = require('./validators');
 var sanitizers = require('./sanitizers');
-
-var paging = {
-    start: 0,
-    count: 1000,
-    sort: ''
-};
-
-var fields = {
-    '*': true
-};
 
 
 module.exports = function (router) {
