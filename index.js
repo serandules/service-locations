@@ -29,7 +29,7 @@ module.exports = function (router) {
      * {"name": "serandives app"}
      */
     router.post('/', validators.create, sanitizers.create, function (req, res) {
-        Locations.createIt(req, res, req.body, function (err, location) {
+        Locations.create(req.body, function (err, location) {
             if (err) {
                 log.error('locations:create', err);
                 return res.pond(errors.serverError());
