@@ -52,29 +52,19 @@ module.exports = function (router) {
     });
 
     router.put('/:id', validators.update, sanitizers.update, function (req, res) {
-        Locations.findOne(req.query).exec(function (err, location) {
+        var id = req.params.id;
+        var data = req.body;
+        Locations.findOneAndUpdate({
+            user: req.user.id,
+            _id: id
+        }, data, {new: true}, function (err, location) {
             if (err) {
-                log.error('locations:find-one', err);
+                log.error('locations:find-one-and-update', err);
                 return res.pond(errors.serverError());
             }
-            if (!location) {
-                return res.pond(errors.notFound());
-            }
-            var id = req.params.id;
-            var data = req.body;
-            Locations.findOneAndUpdate({
-                user: req.user.id,
-                _id: id
-            }, data, {new: true}, function (err, location) {
-                if (err) {
-                    log.error('locations:find-one-and-update', err);
-                    return res.pond(errors.serverError());
-                }
-                res.locate(location.id).status(200).send(location);
-            });
+            res.locate(location.id).status(200).send(location);
         });
     });
-
 
     /**
      * /locations?data={}
