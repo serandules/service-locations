@@ -13,7 +13,7 @@ var validators = require('./validators');
 var sanitizers = require('./sanitizers');
 
 
-module.exports = function (router) {
+module.exports = function (router, done) {
     router.use(serandi.many);
     router.use(serandi.ctx);
     router.use(auth({
@@ -28,74 +28,54 @@ module.exports = function (router) {
     /**
      * {"name": "serandives app"}
      */
-    router.post('/', validators.create, sanitizers.create, function (req, res) {
+    router.post('/', validators.create, sanitizers.create, function (req, res, next) {
         Locations.create(req.body, function (err, location) {
             if (err) {
-                log.error('locations:create', err);
-                return res.pond(errors.serverError());
+                return next(err);
             }
             res.locate(location.id).status(201).send(location);
         });
     });
 
-    router.get('/:id', validators.findOne, sanitizers.findOne, function (req, res) {
+    router.get('/:id', validators.findOne, sanitizers.findOne, function (req, res, next) {
         mongutils.findOne(Locations, req.query, function (err, location) {
             if (err) {
-                log.error('locations:find-one', err);
-                return res.pond(errors.serverError());
-            }
-            if (!location) {
-                return res.pond(errors.notFound());
+              return next(err);
             }
             res.send(location);
         });
     });
 
-    router.put('/:id', validators.update, sanitizers.update, function (req, res) {
-        var id = req.params.id;
-        var data = req.body;
-        Locations.findOneAndUpdate({
-            user: req.user.id,
-            _id: id
-        }, data, {new: true}, function (err, location) {
-            if (err) {
-                log.error('locations:find-one-and-update', err);
-                return res.pond(errors.serverError());
-            }
-            res.locate(location.id).status(200).send(location);
+    router.put('/:id', validators.update, sanitizers.update, function (req, res, next) {
+        mongutils.update(Locations, req.query, req.body, function (err, location) {
+          if (err) {
+            return next(err);
+          }
+          res.locate(location.id).status(200).send(location);
         });
     });
 
     /**
      * /locations?data={}
      */
-    router.get('/', validators.find, sanitizers.find, function (req, res) {
+    router.get('/', validators.find, sanitizers.find, function (req, res, next) {
         mongutils.find(Locations, req.query.data, function (err, locations, paging) {
             if (err) {
-                log.error('locations:find', err);
-                return res.pond(errors.serverError());
+                return next(err);
             }
             res.many(locations, paging);
         });
     });
 
-    router.delete('/:id', function (req, res) {
-        if (!mongutils.objectId(req.params.id)) {
-            return res.pond(errors.notFound());
+    router.delete('/:id', validators.findOne, sanitizers.findOne, function (req, res, next) {
+      mongutils.remove(Locations, req.query, function (err) {
+        if (err) {
+          return next(err);
         }
-        Locations.remove({
-            user: req.user.id,
-            _id: req.params.id
-        }, function (err, o) {
-            if (err) {
-                log.error('locations:remove', err);
-                return res.pond(errors.serverError());
-            }
-            if (!o.n) {
-                return res.pond(errors.notFound());
-            }
-            res.status(204).end();
-        });
+        res.status(204).end();
+      });
     });
+
+    done();
 };
 
