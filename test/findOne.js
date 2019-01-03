@@ -248,6 +248,7 @@ describe('GET /locations', function () {
                         group: groups.public.id,
                         actions: ['read']
                     });
+                    location.visibility['*'].groups.push(groups.public.id);
                     request({
                         uri: pot.resolve('accounts', '/apis/v/locations/' + location.id),
                         method: 'PUT',
