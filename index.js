@@ -34,6 +34,13 @@ module.exports = function (router, done) {
         });
     });
 
+    router.post('/:id',
+      serandi.json,
+      serandi.transit({
+          workflow: 'model',
+          model: Locations
+    }));
+
     router.get('/:id',
       serandi.findOne(Locations),
       function (req, res, next) {

@@ -244,25 +244,10 @@ describe('GET /locations', function () {
                     should.exist(b.code);
                     should.exist(b.message);
                     b.code.should.equal(errors.notFound().data.code);
-                    location.permissions.push({
-                        group: groups.public.id,
-                        actions: ['read']
-                    });
-                    location.visibility['*'].groups.push(groups.public.id);
-                    request({
-                        uri: pot.resolve('accounts', '/apis/v/locations/' + location.id),
-                        method: 'PUT',
-                        auth: {
-                            bearer: client.users[0].token
-                        },
-                        json: location
-                    }, function (e, r, b) {
-                        if (e) {
-                            return done(e);
+                    pot.publish('accounts', 'locations', location.id, client.users[0].token, client.admin.token, function (err) {
+                        if (err) {
+                            return done(err);
                         }
-                        r.statusCode.should.equal(200);
-                        should.exist(b);
-                        validateLocations([b]);
                         request({
                             uri: pot.resolve('accounts', '/apis/v/locations/' + location.id),
                             method: 'GET',
