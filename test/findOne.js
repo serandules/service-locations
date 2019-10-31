@@ -54,7 +54,7 @@ describe('GET /locations', function () {
             should.exist(location.id);
             should.exist(location.user);
             should.exist(location.createdAt);
-            should.exist(location.updatedAt);
+            should.exist(location.modifiedAt);
             should.not.exist(location._id);
             should.not.exist(location.__v);
         });
