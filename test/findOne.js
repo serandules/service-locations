@@ -76,7 +76,7 @@ describe('GET /locations', function () {
             var location = payload();
             location.city = 'Colombo' + count;
             request({
-                uri: pot.resolve('accounts', '/apis/v/locations'),
+                uri: pot.resolve('apis', '/v/locations'),
                 method: 'POST',
                 auth: {
                     bearer: user.token
@@ -92,7 +92,7 @@ describe('GET /locations', function () {
                 should.exist(b.country);
                 b.country.should.equal('LK');
                 should.exist(r.headers['location']);
-                r.headers['location'].should.equal(pot.resolve('accounts', '/apis/v/locations/' + b.id));
+                r.headers['location'].should.equal(pot.resolve('apis', '/v/locations/' + b.id));
                 created();
             });
         }, done);
@@ -100,7 +100,7 @@ describe('GET /locations', function () {
 
     it('invalid id', function (done) {
         request({
-            uri: pot.resolve('accounts', '/apis/v/locations/undefined'),
+            uri: pot.resolve('apis', '/v/locations/undefined'),
             method: 'GET',
             auth: {
                 bearer: client.users[0].token
@@ -121,7 +121,7 @@ describe('GET /locations', function () {
 
     it('owner can access', function (done) {
         request({
-            uri: pot.resolve('accounts', '/apis/v/locations'),
+            uri: pot.resolve('apis', '/v/locations'),
             method: 'GET',
             auth: {
                 bearer: client.users[0].token
@@ -137,7 +137,7 @@ describe('GET /locations', function () {
             b.length.should.equal(1);
             validateLocations(b);
             request({
-                uri: pot.resolve('accounts', '/apis/v/locations/' + b[0].id),
+                uri: pot.resolve('apis', '/v/locations/' + b[0].id),
                 method: 'GET',
                 auth: {
                     bearer: client.users[0].token
@@ -157,7 +157,7 @@ describe('GET /locations', function () {
 
     it('others cannot access', function (done) {
         request({
-            uri: pot.resolve('accounts', '/apis/v/locations'),
+            uri: pot.resolve('apis', '/v/locations'),
             method: 'GET',
             auth: {
                 bearer: client.users[0].token
@@ -173,7 +173,7 @@ describe('GET /locations', function () {
             b.length.should.equal(1);
             validateLocations(b);
             request({
-                uri: pot.resolve('accounts', '/apis/v/locations/' + b[0].id),
+                uri: pot.resolve('apis', '/v/locations/' + b[0].id),
                 method: 'GET',
                 auth: {
                     bearer: client.users[1].token
@@ -196,7 +196,7 @@ describe('GET /locations', function () {
 
     it('can be accessed by anyone when public', function (done) {
         request({
-            uri: pot.resolve('accounts', '/apis/v/locations'),
+            uri: pot.resolve('apis', '/v/locations'),
             method: 'GET',
             auth: {
                 bearer: client.users[0].token
@@ -213,7 +213,7 @@ describe('GET /locations', function () {
             validateLocations(b);
             var location = b[0];
             request({
-                uri: pot.resolve('accounts', '/apis/v/locations/' + location.id),
+                uri: pot.resolve('apis', '/v/locations/' + location.id),
                 method: 'GET',
                 auth: {
                     bearer: client.users[1].token
@@ -229,7 +229,7 @@ describe('GET /locations', function () {
                 should.exist(b.message);
                 b.code.should.equal(errors.notFound().data.code);
                 request({
-                    uri: pot.resolve('accounts', '/apis/v/locations/' + location.id),
+                    uri: pot.resolve('apis', '/v/locations/' + location.id),
                     method: 'GET',
                     auth: {
                         bearer: client.users[1].token
@@ -244,12 +244,12 @@ describe('GET /locations', function () {
                     should.exist(b.code);
                     should.exist(b.message);
                     b.code.should.equal(errors.notFound().data.code);
-                    pot.publish('accounts', 'locations', location.id, client.users[0].token, client.admin.token, function (err) {
+                    pot.publish('locations', location.id, client.users[0].token, client.admin.token, function (err) {
                         if (err) {
                             return done(err);
                         }
                         request({
-                            uri: pot.resolve('accounts', '/apis/v/locations/' + location.id),
+                            uri: pot.resolve('apis', '/v/locations/' + location.id),
                             method: 'GET',
                             auth: {
                                 bearer: client.users[1].token
@@ -263,7 +263,7 @@ describe('GET /locations', function () {
                             should.exist(b);
                             validateLocations([b]);
                             request({
-                                uri: pot.resolve('accounts', '/apis/v/locations/' + location.id),
+                                uri: pot.resolve('apis', '/v/locations/' + location.id),
                                 method: 'GET',
                                 auth: {
                                     bearer: client.users[2].token

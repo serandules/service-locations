@@ -48,7 +48,7 @@ describe('POST /locations', function () {
 
   it('with no media type', function (done) {
     request({
-      uri: pot.resolve('accounts', '/apis/v/locations'),
+      uri: pot.resolve('apis', '/v/locations'),
       method: 'POST',
       auth: {
         bearer: client.users[0].token
@@ -69,7 +69,7 @@ describe('POST /locations', function () {
 
   it('with unsupported media type', function (done) {
     request({
-      uri: pot.resolve('accounts', '/apis/v/locations'),
+      uri: pot.resolve('apis', '/v/locations'),
       method: 'POST',
       headers: {
         'Content-Type': 'application/xml'
@@ -105,7 +105,7 @@ describe('POST /locations', function () {
   withoutFields.forEach(function (field) {
     it('without ' + field, function (done) {
       request({
-        uri: pot.resolve('accounts', '/apis/v/locations'),
+        uri: pot.resolve('apis', '/v/locations'),
         method: 'POST',
         json: without([field]),
         auth: {
@@ -148,7 +148,7 @@ describe('POST /locations', function () {
     values.forEach(function (value, i) {
       it('invalid ' + field + ' with value ' + i, function (done) {
         request({
-          uri: pot.resolve('accounts', '/apis/v/locations'),
+          uri: pot.resolve('apis', '/v/locations'),
           method: 'POST',
           json: invalid(field, value),
           auth: {
@@ -171,7 +171,7 @@ describe('POST /locations', function () {
 
   it('valid', function (done) {
     request({
-      uri: pot.resolve('accounts', '/apis/v/locations'),
+      uri: pot.resolve('apis', '/v/locations'),
       method: 'POST',
       json: data,
       auth: {
@@ -188,7 +188,7 @@ describe('POST /locations', function () {
       should.exist(b.longitude);
       b.longitude.should.equal(data.longitude);
       should.exist(r.headers['location']);
-      r.headers['location'].should.equal(pot.resolve('accounts', '/apis/v/locations/' + b.id));
+      r.headers['location'].should.equal(pot.resolve('apis', '/v/locations/' + b.id));
       done();
     });
   });
@@ -205,7 +205,7 @@ describe('POST /locations', function () {
         }
       };
       request({
-        uri: pot.resolve('accounts', '/apis/v/locations'),
+        uri: pot.resolve('apis', '/v/locations'),
         method: 'POST',
         json: d,
         auth: {
@@ -228,7 +228,7 @@ describe('POST /locations', function () {
           }
         };
         request({
-          uri: pot.resolve('accounts', '/apis/v/locations'),
+          uri: pot.resolve('apis', '/v/locations'),
           method: 'POST',
           json: d,
           auth: {
@@ -251,7 +251,7 @@ describe('POST /locations', function () {
             }
           };
           request({
-            uri: pot.resolve('accounts', '/apis/v/locations'),
+            uri: pot.resolve('apis', '/v/locations'),
             method: 'POST',
             json: d,
             auth: {
@@ -274,7 +274,7 @@ describe('POST /locations', function () {
               }
             };
             request({
-              uri: pot.resolve('accounts', '/apis/v/locations'),
+              uri: pot.resolve('apis', '/v/locations'),
               method: 'POST',
               json: d,
               auth: {
@@ -291,13 +291,13 @@ describe('POST /locations', function () {
               should.exist(location.longitude);
               location.longitude.should.equal(data.longitude);
               should.exist(r.headers['location']);
-              r.headers['location'].should.equal(pot.resolve('accounts', '/apis/v/locations/' + location.id));
-              pot.publish('accounts', 'locations', location.id, client.users[0].token, client.admin.token, function (err) {
+              r.headers['location'].should.equal(pot.resolve('apis', '/v/locations/' + location.id));
+              pot.publish('locations', location.id, client.users[0].token, client.admin.token, function (err) {
                 if (err) {
                   return done(err);
                 }
                 request({
-                  uri: pot.resolve('accounts', '/apis/v/locations/' + location.id),
+                  uri: pot.resolve('apis', '/v/locations/' + location.id),
                   method: 'GET',
                   auth: {
                     bearer: client.users[2].token
@@ -318,7 +318,7 @@ describe('POST /locations', function () {
                   should.not.exist(b.line1);
                   should.not.exist(b.line2);
                   request({
-                    uri: pot.resolve('accounts', '/apis/v/locations/' + location.id),
+                    uri: pot.resolve('apis', '/v/locations/' + location.id),
                     method: 'GET',
                     json: true
                   }, function (e, r, b) {
@@ -335,7 +335,7 @@ describe('POST /locations', function () {
                     should.not.exist(b.longitude);
                     should.not.exist(b.line1);
                     should.not.exist(b.line2);
-                    pot.traverse('accounts', 'locations', location.id, client.users[0].token, ['unpublish', 'edit'], function (err) {
+                    pot.traverse('locations', location.id, client.users[0].token, ['unpublish', 'edit'], function (err) {
                       if (err) {
                         return done(err);
                       }
@@ -347,7 +347,7 @@ describe('POST /locations', function () {
                         }
                       };
                       request({
-                        uri: pot.resolve('accounts', '/apis/v/locations'),
+                        uri: pot.resolve('apis', '/v/locations'),
                         method: 'POST',
                         json: d,
                         auth: {
@@ -358,12 +358,12 @@ describe('POST /locations', function () {
                           return done(e);
                         }
                         r.statusCode.should.equal(201);
-                        pot.publish('accounts', 'locations', location.id, client.users[0].token, client.admin.token, function (err) {
+                        pot.publish('locations', location.id, client.users[0].token, client.admin.token, function (err) {
                           if (err) {
                             return done(err);
                           }
                           request({
-                            uri: pot.resolve('accounts', '/apis/v/locations/' + location.id),
+                            uri: pot.resolve('apis', '/v/locations/' + location.id),
                             method: 'GET',
                             json: true
                           }, function (e, r, b) {
@@ -381,7 +381,7 @@ describe('POST /locations', function () {
                             should.not.exist(b.line1);
                             should.not.exist(b.line2);
                             request({
-                              uri: pot.resolve('accounts', '/apis/v/locations/' + location.id),
+                              uri: pot.resolve('apis', '/v/locations/' + location.id),
                               method: 'GET',
                               auth: {
                                 bearer: client.users[2].token
